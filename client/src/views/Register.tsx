@@ -3,6 +3,9 @@ import { Box, Button, Heading, Grommet } from "grommet";
 import AppBar from "../components/AppBar";
 import { Notification } from "grommet-icons";
 
+import { connect } from "react-redux";
+import { inputName, submitName } from "../actions";
+
 const theme = {
   global: {
     colors: {
@@ -15,6 +18,11 @@ const theme = {
     },
   },
 };
+
+function onSubmit(e) {
+  e.preventDefault();
+  submitName(name);
+}
 
 function Register() {
   return (
@@ -29,7 +37,16 @@ function Register() {
         </AppBar>
         <Box direction="row" flex overflow={{ horizontal: "hidden" }}>
           <Box flex align="center" justify="center">
-            Register Page
+            <form action="" onSubmit={onSubmit}>
+              <input
+                name="name"
+                type="text"
+                placeholder="Your name"
+                onChange={(e) => inputName(e.target.value)}
+                value={name}
+              />
+              <button>Submit</button>
+            </form>
           </Box>
           <Box
             width="medium"
@@ -46,4 +63,16 @@ function Register() {
   );
 }
 
-export default Register;
+interface RegisterState {
+  name: string
+}
+function mapStateToProps(state: RegisterState) {
+  return { name: state.name };
+}
+
+const mapDispatch = {
+  inputName: () => ({ type: 'INPUT_NAME' }),
+  submitName: () => ({ type: 'SUBMIT_NAME' })
+}
+
+export default connect(mapStateToProps, mapDispatch)(Register);
